@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>English Level Checker - Multi-Stage Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      max-width: 800px;
+      line-height: 1.6;
+    }
+    h1 {
+      text-align: center;
+    }
+    .section-header {
+      font-weight: bold;
+      margin-top: 30px;
+      margin-bottom: 10px;
+      font-size: 1.2em;
+      color: #333;
+      text-align: center;
+    }
+    .question {
+      margin-bottom: 20px;
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+    }
+    .question h3 {
+      margin: 0 0 10px 0;
+    }
+    .result {
+      margin-top: 30px;
+      font-size: 1.3em;
+      white-space: pre-wrap;
+      text-align: center;
+    }
+    button {
+      padding: 10px 15px;
+      font-size: 1em;
+      cursor: pointer;
+      margin: 20px auto;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <img src="https://chart.googleapis.com/chart?cht=qr&chs=300x300&chl=https://your-website-url.com" alt="QR Code">
+
+  <h1>English Level Checker Test</h1>
+  <div id="quiz-container">
+    <!-- Section questions will be rendered here -->
+  </div>
+  <button id="submitBtn">Submit Section</button>
+  <div id="result" class="result"></div>
+
+  <script>
+    // Array of 40 questions with level categorization, answer options, and the index of the correct answer.
+    const questions = [
+      // A1 (Beginner) – First 10 Questions
+      { question: "1. What is the plural of “cat”?", options: ["Cats", "Cates", "Cat’s", "Catses"], answer: 0, level: "A1" },
+      { question: "2. What is the correct verb form? “She ____ a book.”", options: ["read", "reads", "reading", "readed"], answer: 1, level: "A1" },
+      { question: "3. Choose the correct option: “I ____ from France.”", options: ["is", "are", "am", "be"], answer: 2, level: "A1" },
+      { question: "4. What is the opposite of “big”?", options: ["Small", "Long", "Heavy", "Short"], answer: 0, level: "A1" },
+      { question: "5. Choose the correct sentence:", options: ["He can plays the piano.", "He can play the piano.", "He cans play the piano.", "He playing the piano."], answer: 1, level: "A1" },
+      { question: "6. What is the correct question word? “____ is your name?”", options: ["What", "Who", "Where", "How"], answer: 0, level: "A1" },
+      { question: "7. Choose the correct sentence:", options: ["She like apples.", "She likes apples.", "She liking apples.", "She liked apples."], answer: 1, level: "A1" },
+      { question: "8. What is the correct preposition? “The book is ____ the table.”", options: ["on", "at", "in", "of"], answer: 0, level: "A1" },
+      { question: "9. Choose the correct article: “I have ____ apple.”", options: ["an", "a", "the", "some"], answer: 0, level: "A1" },
+      { question: "10. What is the correct form? “We ____ to school every day.”", options: ["go", "goes", "going", "went"], answer: 0, level: "A1" },
+      
+      // A2 (Elementary) – Next 10 Questions
+      { question: "11. What is the past simple of “buy”?", options: ["Buyed", "Bought", "Buys", "Buying"], answer: 1, level: "A2" },
+      { question: "12. Choose the correct comparative form: “This bag is ____ than that one.”", options: ["big", "bigger", "biggest", "more big"], answer: 1, level: "A2" },
+      { question: "13. Which sentence is correct?", options: ["She don’t like coffee.", "She doesn’t like coffee.", "She no like coffee.", "She not like coffee."], answer: 1, level: "A2" },
+      { question: "14. What is the correct question form?", options: ["Do you like pizza?", "You like pizza?", "Likes you pizza?", "Do like you pizza?"], answer: 0, level: "A2" },
+      { question: "15. Choose the correct modal verb: “You ____ be quiet in the library.”", options: ["can", "must", "should", "will"], answer: 1, level: "A2" },
+      { question: "16. What is the opposite of “cheap”?", options: ["Expensive", "Large", "Easy", "Hard"], answer: 0, level: "A2" },
+      { question: "17. Choose the correct future tense: “I ____ visit my grandmother tomorrow.”", options: ["will", "am", "do", "was"], answer: 0, level: "A2" },
+      { question: "18. Choose the correct possessive pronoun: “This bag is ____.”", options: ["me", "mine", "my", "I"], answer: 1, level: "A2" },
+      { question: "19. What is the past simple of “go”?", options: ["Go", "Goed", "Going", "Went"], answer: 3, level: "A2" },
+      { question: "20. Which sentence is correct?", options: ["They was at home.", "They were at home.", "They is at home.", "They be at home."], answer: 1, level: "A2" },
+      
+      // B1 (Intermediate) – Next 10 Questions
+      { question: "21. Choose the correct option: “If I ____ a car, I would drive to work.”", options: ["have", "had", "will have", "has"], answer: 1, level: "B1" },
+      { question: "22. What is the synonym of “angry”?", options: ["Happy", "Furious", "Sleepy", "Calm"], answer: 1, level: "B1" },
+      { question: "23. What is the correct reported speech? “She said, ‘I am tired.’”", options: ["She said she was tired.", "She said she is tired.", "She said she were tired.", "She said she be tired."], answer: 0, level: "B1" },
+      { question: "24. Choose the correct passive voice form: “They built the house in 1999.”", options: ["The house built in 1999.", "The house was built in 1999.", "The house is built in 1999.", "The house were built in 1999."], answer: 1, level: "B1" },
+      { question: "25. What is the correct form? “I have never ____ to Canada.”", options: ["go", "gone", "went", "going"], answer: 1, level: "B1" },
+      { question: "26. What is the correct phrasal verb? “Can you ____ the TV? It’s too loud.”", options: ["turn down", "turn up", "turn on", "turn off"], answer: 0, level: "B1" },
+      { question: "27. Choose the correct preposition: “She is interested ____ music.”", options: ["at", "in", "on", "by"], answer: 1, level: "B1" },
+      { question: "28. What is the opposite of “polite”?", options: ["Rude", "Kind", "Happy", "Shy"], answer: 0, level: "B1" },
+      { question: "29. Which sentence is correct?", options: ["He told me don’t be late.", "He told me not to be late.", "He told me to not be late.", "He told me be not late."], answer: 1, level: "B1" },
+      { question: "30. What is the correct third conditional sentence?", options: ["If I studied harder, I will pass the exam.", "If I had studied harder, I would have passed the exam.", "If I studied harder, I passed the exam.", "If I study harder, I would pass the exam."], answer: 1, level: "B1" },
+      
+      // B2 (Upper-Intermediate) – Last 10 Questions
+      { question: "31. What is the correct sentence?", options: ["Had I known, I wouldn’t go.", "Had I known, I wouldn’t have gone.", "Had I know, I wouldn’t go.", "Had I knew, I wouldn’t have gone."], answer: 1, level: "B2" },
+      { question: "32. What is a synonym of “persuade”?", options: ["Convince", "Ignore", "Refuse", "Allow"], answer: 0, level: "B2" },
+      { question: "33. Choose the correct sentence:", options: ["I regret to tell you that you failed the exam.", "I regret telling you that you failed the exam.", "I regret told you that you failed the exam.", "I regret to telling you that you failed the exam."], answer: 0, level: "B2" },
+      { question: "34. What is the correct form? “He admitted ____ the vase.”", options: ["to break", "breaking", "broke", "break"], answer: 1, level: "B2" },
+      { question: "35. What is the correct sentence?", options: ["She suggested that we should leave early.", "She suggested us to leave early.", "She suggested that we leaving early.", "She suggested that we leave early."], answer: 3, level: "B2" },
+      { question: "36. What is the opposite of “scarce”?", options: ["Plentiful", "Rare", "Insufficient", "Expensive"], answer: 0, level: "B2" },
+      { question: "37. Choose the correct phrase: “She was accused ____ stealing money.”", options: ["of", "on", "at", "in"], answer: 0, level: "B2" },
+      { question: "38. What is the correct sentence?", options: ["I would rather you went home.", "I would rather you go home.", "I would rather you to go home.", "I would rather you going home."], answer: 0, level: "B2" },
+      { question: "39. What is a synonym of “compulsory”?", options: ["Optional", "Required", "Unnecessary", "Free"], answer: 1, level: "B2" },
+      { question: "40. What is the correct sentence?", options: ["It’s high time you studied.", "It’s high time you study.", "It’s high time you studies.", "It’s high time you studying."], answer: 0, level: "B2" }
+    ];
+
+    // Define the order of sections.
+    const sections = ["A1", "A2", "B1", "B2"];
+    let currentSectionIndex = 0;
+
+    // Tracks how many correct answers the student got in each section.
+    const cumulativeScores = { "A1": 0, "A2": 0, "B1": 0, "B2": 0 };
+
+    const quizContainer = document.getElementById("quiz-container");
+    const resultDiv = document.getElementById("result");
+    const submitBtn = document.getElementById("submitBtn");
+
+    // Renders the questions for the current section.
+    function renderSection() {
+      quizContainer.innerHTML = "";
+      resultDiv.textContent = "";
+
+      const currentLevel = sections[currentSectionIndex];
+      const sectionQuestions = questions.filter(q => q.level === currentLevel);
+
+      // Display section header
+      const header = document.createElement("div");
+      header.className = "section-header";
+      header.textContent = `Section ${currentLevel}`;
+      quizContainer.appendChild(header);
+
+      // Render each question
+      sectionQuestions.forEach((q, index) => {
+        const container = document.createElement("div");
+        container.className = "question";
+        
+        const questionTitle = document.createElement("h3");
+        questionTitle.textContent = q.question;
+        container.appendChild(questionTitle);
+
+        // Create radio button options
+        q.options.forEach((option, optIndex) => {
+          const label = document.createElement("label");
+          label.style.display = "block";
+          const radio = document.createElement("input");
+          radio.type = "radio";
+          // Unique name for each question within this section
+          radio.name = `sectionQuestion${index}`;
+          radio.value = optIndex;
+          label.appendChild(radio);
+          label.append(" " + option);
+          container.appendChild(label);
+        });
+
+        quizContainer.appendChild(container);
+      });
+    }
+
+    // Evaluates the current section.
+    function evaluateSection() {
+      const currentLevel = sections[currentSectionIndex];
+      const sectionQuestions = questions.filter(q => q.level === currentLevel);
+      let correctCount = 0;
+
+      sectionQuestions.forEach((q, index) => {
+        const selected = document.querySelector(`input[name="sectionQuestion${index}"]:checked`);
+        if (selected && parseInt(selected.value) === q.answer) {
+          correctCount++;
+          cumulativeScores[currentLevel]++;
+        }
+      });
+      return correctCount;
+    }
+
+    // Displays a breakdown of all sections attempted so far.
+    function getSummaryString(lastSection) {
+      let summary = "Summary of Your Performance:\n\n";
+      // Show all sections from 0 up to lastSection (inclusive).
+      for (let i = 0; i <= lastSection; i++) {
+        const level = sections[i];
+        summary += `${level}: ${cumulativeScores[level]}/10 correct\n`;
+      }
+      return summary;
+    }
+
+    // Handles the "Submit Section" button click.
+    submitBtn.addEventListener("click", function() {
+      const currentLevel = sections[currentSectionIndex];
+      const correctCount = evaluateSection();
+
+      // If student scores at least 6, move to next section if available
+      if (correctCount >= 6) {
+        if (currentSectionIndex < sections.length - 1) {
+          alert(`Section ${currentLevel}: ${correctCount}/10 correct. Moving on to the next section.`);
+          currentSectionIndex++;
+          renderSection();
+        } else {
+          // Last section passed; display final summary of all sections
+          let summary = `Section ${currentLevel}: ${correctCount}/10 correct.\n\n`;
+          summary += getSummaryString(currentSectionIndex);
+          summary += "\nCongratulations! You have passed all sections.\n";
+          summary += "Your final level is: B2 (Upper-Intermediate)";
+
+          quizContainer.innerHTML = "";
+          submitBtn.style.display = "none";
+          resultDiv.textContent = summary;
+        }
+      } else {
+        // If threshold not met, end the test with partial summary
+        let summary = `Section ${currentLevel}: ${correctCount}/10 correct.\n\n`;
+        summary += "You did not get at least 6 correct answers.\n\n";
+        summary += getSummaryString(currentSectionIndex);
+        summary += "\nThe test has ended.";
+
+        quizContainer.innerHTML = "";
+        submitBtn.style.display = "none";
+        resultDiv.textContent = summary;
+      }
+    });
+
+    // Start by rendering the first section.
+    renderSection();
+  </script>
+</body>
+</html>
